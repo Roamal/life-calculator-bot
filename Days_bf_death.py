@@ -1,6 +1,7 @@
 from datetime import datetime
 from who_statistic import getLiveByCountrySex
 
+
 class Days_before_Death:
 
     def __init__(self, date_str: str, gender: str, country: str):
@@ -15,16 +16,17 @@ class Days_before_Death:
         self.avg_live_days = None
         self.life_data = None
         
+
+
+    def calc_days_before_death(self):
         try:
             self.life_data = getLiveByCountrySex(self.country, self.gender)
             self.avg_live_years = self.life_data.HowMuchRemained()
             self.avg_live_days = self.avg_live_years * 365
             
         except Exception as e:
-            print(f"Ошибка! {e}, Нет такой страны")
-            raise  
+            return f"Ошибка! {e}, Нет такой страны"
 
-    def calc_days_before_death(self):
         # Проверяем, что данные были успешно получены
         if self.avg_live_days is None or self.avg_live_years is None:
             return "❌ Ошибка: Не удалось получить данные о продолжительности жизни для указанной страны и пола."

@@ -1,4 +1,5 @@
 import requests
+import json
 
 class getLiveByCountrySex:
     def __init__(self, user_country, user_sex):
@@ -12,54 +13,8 @@ class getLiveByCountrySex:
         }
 
 
-        country_codes = {
-            'россия': 'RUS',
-            'рф': 'RUS',
-            'russia': 'RUS',
-            'сша': 'USA',
-            'америка': 'USA',
-            'usa': 'USA',
-            'united states': 'USA',
-            'китай': 'CHN',
-            'china': 'CHN',
-            'германия': 'DEU',
-            'germany': 'DEU',
-            'франция': 'FRA',
-            'france': 'FRA',
-            'великобритания': 'GBR',
-            'great britain': 'GBR',
-            'united kingdom': 'GBR',
-            'англия': 'GBR',
-            'япония': 'JPN',
-            'japan': 'JPN',
-            'канада': 'CAN',
-            'canada': 'CAN',
-            'австралия': 'AUS',
-            'australia': 'AUS',
-            'бразилия': 'BRA',
-            'brazil': 'BRA',
-            'индия': 'IND',
-            'india': 'IND',
-            'италия': 'ITA',
-            'italy': 'ITA',
-            'испания': 'ESP',
-            'spain': 'ESP',
-            'украина': 'UKR',
-            'ukraine': 'UKR',
-            'казахстан': 'KAZ',
-            'kazakhstan': 'KAZ',
-            'беларусь': 'BLR',
-            'belarus': 'BLR',
-            'польша': 'POL',
-            'poland': 'POL',
-            'турция': 'TUR',
-            'turkey': 'TUR',
-            'южная корея': 'KOR',
-            'south korea': 'KOR',
-            'korea': 'KOR',
-            'мексика': 'MEX',
-            'mexico': 'MEX'
-        }
+        with open('countries.json', 'r', encoding='utf-8') as f:
+            country_codes = json.load(f) # Получаем json словарь со странами 
 
         # Проверяем, есть ли страна в словаре
         if self.user_country not in country_codes:
