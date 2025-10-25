@@ -5,15 +5,17 @@ import re
 from Days_bf_death import Days_before_Death
 
 
-ENTER_BIRTHDATE, CHOOSE_GENDER, CHOOSE_COUNTRY = range(3)
-class Death_bot:
+ENTER_BIRTHDATE, CHOOSE_GENDER, CHOOSE_COUNTRY= range(3)
+class death_bot:
      def __init__(self,token:str):
+         print(f"🔍 DEBUG: Bot __init__ called with token: {token[:10]}...")
          self.token = token
          self.app = Application.builder().token(token).build()
          self.setup_handlers()
          self.user_data = {}
 
      def setup_handlers(self):
+        print("🔍 DEBUG: Setting up handlers...")
         conv_handler = ConversationHandler(
             entry_points=[CommandHandler('start', self.start)],
             states={
@@ -26,16 +28,20 @@ class Death_bot:
 
                 ],
                 CHOOSE_COUNTRY: [
-                    MessageHandler(filters.Regex('^(Russia|USA|Japan|Germany|World)$'), self.receive_country)
-                ]},
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, self.receive_country)
+                ]
+},
                 
                 fallbacks=[CommandHandler('cancel', self.cancel)],
         )
         self.app.add_handler(conv_handler)
         self.app.add_handler(CommandHandler("help", self.help))
         self.app.add_handler(CommandHandler("cancel", self.cancel))
+        print("🔍 DEBUG: Handlers setup completed")  
 
+        
      async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        print("🔍 DEBUG: /start command received")
         """Вывожу приветствие"""
         welcome_text = """
     **Бот расчитывает продолжительность жизни**
@@ -102,22 +108,14 @@ class Death_bot:
          
          gender_choice = update.message.text
          gender = 'm' if gender_choice == "Male" else 'f'
-     
+            
          context.user_data['gender'] = gender
 
          
    
 
          try:
-            keyboard = [['Russia','USA','Japan','Germany','World']]
-             
-            reply_markup = ReplyKeyboardMarkup(
-                keyboard,
-                resize_keyboard=True,
-                one_time_keyboard=True,
-                input_field_placeholder="Выберите вашу страну"
-                                                )
-            await update.message.reply_text("✅ гендер принят!\n\n👥 **Теперь выберите вашу страну:**", reply_markup=reply_markup)
+            await update.message.reply_text("✅ гендер принят!\n\n👥 **Теперь выберите вашу страну:**")
             return CHOOSE_COUNTRY
          
          except Exception as e:
@@ -126,22 +124,36 @@ class Death_bot:
          
 
      async def receive_country(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-         country = update.message.text
-         context.user_data['country'] = country
-         
+         self.country = update.message.text
+         context.user_data['country'] = self.country
 
-         birthdate_str = context.user_data.get('birthdate')
-         gender = context.user_data.get('gender')
-         
-
+         await self.show_results(update, context)
+         return ConversationHandler.END
+     
 
 
-         try:
-            calculator = Days_before_Death(birthdate_str, gender, country)
-            result = calculator.calc_days_before_death()
-            await update.message.reply_text(result)
-         except Exception as e:
-             await update.message.reply_text(f"Error {e}, something with countrt")
+
+
+
+     
+     async def show_results(self, update: Update, context: ContextTypes.DEFAULT_TYPE):  
+    # Получаем все данные
+        birthdate = context.user_data.get('birthdate')
+        gender = context.user_data.get('gender')
+        country = context.user_data.get('country')
+
+    
+    # Рассчитываем результат
+        calculator = Days_before_Death(birthdate, gender, country)
+        
+        result = calculator.calc_days_before_death()
+        
+        # Показываем результат
+        await update.message.reply_text(
+            result,
+            reply_markup=ReplyKeyboardMarkup([["/start - Новый расчет"]], resize_keyboard=True),
+            parse_mode='Markdown'
+        )      
 
 
 
@@ -159,8 +171,17 @@ class Death_bot:
      
 
      def run(self):
-         print("bot is start polling")
-         self.app.run_polling()
+        print("bot is start polling")
+        try:
+        # Правильный запуск для версии 20.x
+            self.app.run_polling(
+            poll_interval=1.0,
+            timeout=10,
+            drop_pending_updates=True,
+            allowed_updates=None
+        )
+        except Exception as e:
+            print(f"Polling error: {e}")
 
                 
 
