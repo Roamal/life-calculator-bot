@@ -80,7 +80,7 @@ class Days_before_Death:
 
 📈 **Прогресс жизни:** {life_percentage:.1f}%
 
-💡 *На основе статистики в {your_country} {gender_text.replace('а', 'ы')} живут в среднем: {self.avg_live_years} лет*
+💡 *На основе статистики средний возраст в стране: {your_country} для {gender_text.replace('а', '')} - {self.avg_live_years} лет*
 
 🔄 Новый расчет: /start
         """

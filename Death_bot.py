@@ -4,6 +4,7 @@ from datetime import datetime
 from Days_bf_death import Days_before_Death
 import json
 import re
+from database import db
 
 ENTER_BIRTHDATE, CHOOSE_GENDER, CHOOSE_COUNTRY = range(3)
 
@@ -154,8 +155,18 @@ class death_bot:
 
         # Рассчитываем результат
         calculator = Days_before_Death(birthdate, gender, country)
-        
         result = calculator.calc_days_before_death()
+
+        user_id = update.effective_user.id
+        db.save_calculation(
+            user_id=user_id,
+            birth_date=birthdate,
+            gender=gender,
+            country=country,
+            life_expectancy = calculator.avg_live_years,
+            days_lived=  calculator.lived_days,
+        )
+        print(db.get_user_calculations(user_id))
         
         # Показываем результат
         await update.message.reply_text(
