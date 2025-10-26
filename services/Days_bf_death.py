@@ -1,5 +1,5 @@
 from datetime import datetime
-from who_statistic import getLiveByCountrySex
+from services.who_statistic import getLiveByCountrySex
 
 
 class Days_before_Death:

@@ -1,10 +1,11 @@
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, ConversationHandler
 from datetime import datetime
-from Days_bf_death import Days_before_Death
+from services.Days_bf_death import Days_before_Death
 import json
 import re
-from database import db
+from database.database import db
+
 
 ENTER_BIRTHDATE, CHOOSE_GENDER, CHOOSE_COUNTRY = range(3)
 
@@ -12,7 +13,7 @@ class death_bot:
     def __init__(self, token: str):
         print(f"🔍 DEBUG: Bot __init__ called with token: {token[:10]}...")
         try:
-            with open('countries.json', 'r', encoding='utf-8') as f:
+            with open('assets\countries.json', 'r', encoding='utf-8') as f:
                 countries_dict = json.load(f)
             self.countries = list(countries_dict.keys())
             print(f"🔍 DEBUG: Loaded {len(self.countries)} countries")

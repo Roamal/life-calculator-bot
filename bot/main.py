@@ -1,5 +1,5 @@
-from Death_bot import death_bot
-from TOKEN  import BOT_TOKEN
+from bot.bot import death_bot
+from config.TOKEN import BOT_TOKEN
 
 
 
@@ -13,5 +13,3 @@ def main():
         print(f"Error: {e}")
 
         
-if __name__ == "__main__":
-    main()

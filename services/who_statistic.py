@@ -13,7 +13,7 @@ class getLiveByCountrySex:
         }
 
 
-        with open('countries.json', 'r', encoding='utf-8') as f:
+        with open('assets\\countries.json', 'r', encoding='utf-8') as f:
             country_codes = json.load(f) # Получаем json словарь со странами 
 
         # Проверяем, есть ли страна в словаре
