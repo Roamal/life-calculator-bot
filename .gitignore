@@ -51,3 +51,8 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+
+# Data base files
+*.db
+*.sqlite
+database/
